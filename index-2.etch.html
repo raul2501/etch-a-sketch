@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head> 
-        <meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> etch-a-sketch | noobdev </title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <h1> etch-a-sketch </h1>
-        <button type="button" value="reset" name="reset" onclick="location.reload()"> Reset </button>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> etch-a-sketch | noobdev </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1> etch-a-sketch </h1>
+    <div id="parent">
+        <button type="button" value="reset" name="reset" onclick="location.reload()"> Edit Grid </button>
+        <button type="button" value="refresh" onclick="refresh()"> Refresh Grid </button>
         <br>
-        <br> 
-        <div id ="parent"> </div>
-        <script>
-            
-        let container = document.getElementById("parent");
-        let rows = document.getElementsByClassName("gridRow");
+        <br>
+        <div id="container"> </div>
+    </div>
+    <script>
+
+        let container = document.getElementById("container");
         let cells = document.getElementsByClassName("cell");
         makeGrid();
 
-        
-
         function makeGrid() {
-            let square = prompt("Enter the number of squares you want (below 100)", ""); 
-            makeRows(square)
-            makeColumns(square)
-        }
-
-        
-
-        function makeRows(rowNum){ 
-            for (r=0; r < rowNum; r++) { 
-                let row = document.createElement("div");
-                container.appendChild(row).className = "gridRow";
+            let square = prompt("Enter the number of squares you want (below 100)");
+            if (square > 0 && square < 100) {
+                setGrid(square)
+                fillGrid(square)
+            }
+            else {
+                prompt("Please enter a number between 0 and 100");
+                makeGrid();
             }
         }
 
-        function makeColumns(cellNum) {
-            for (i = 0; i < rows.length; i++) { 
-                for (j = 0; j < cellNum; j++) { 
-                    let newCell = document.createElement("div")
-                    rows[j].appendChild(newCell).className = "cell"
-                }
+        function setGrid(rowNum) {
+            container.style.gridTemplateColumns = `repeat(${rowNum}, 1fr)`;
+        }
+
+        function fillGrid(cellNum) {
+            for (i = 0; i < cellNum * cellNum; i++) {
+                let newCell = document.createElement("div")
+                container.appendChild(newCell).className = "cell"
             }
         }
-        
-        document.querySelectorAll('.cell').forEach(cell => { 
-            cell.addEventListener("mouseover", hover => { 
-                // cell.classList.add('hover');
-                cell.style.backgroundColor= generateRandomColor() // function that generates a random colour when mouse hovers over the grid
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener("mouseover", hover => {
+                cell.style.backgroundColor = generateRandomColor() // function that generates a random colour when mouse hovers over the grid
             })
         })
 
         function generateRandomColor() {
-            var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+            var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
             return randomColor;
         }
 
-    
-        
-        </script>
-    </body>
+        function refresh() {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.style.backgroundColor = null
+            })
+        }
+
+
+
+
+    </script>
+</body>
+
 </html>
